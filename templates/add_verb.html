@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h2>単語登録画面</h2>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.str_en.label }}{{ form.str_en() }}<br>
+        {{ form.str_ja.label }}{{ form.str_ja() }}<br>
+        {{ form.submit() }}
+    </form>
+</div>
+{% endblock %}

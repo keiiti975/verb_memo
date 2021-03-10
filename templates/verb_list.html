@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<a href="{{ url_for('add_verb') }}">単語を追加</a>
+<div>
+    <h2>単語一覧</h2>
+    <table>
+        <tr>
+            <th>英語</th>
+            <th>日本語</th>
+            <th>更新ボタン</th>
+            <th>削除ボタン</th>
+        </tr>
+        {% for verb in verbs %}
+        <tr>
+            <td>{{ verb.str_en }}</td>
+            <td>{{ verb.str_ja }}</td>
+            <td>
+                <form action="{{ url_for('update_verb', verb_id=verb.id) }}">
+                    <input type="submit" value="更新">
+                </form>
+            </td>
+            <td>
+                <form method="POST" action="{{ url_for('delete_verb') }}">
+                    {{ form.csrf_token }}
+                    {{ form.id(value=verb.id) }}
+                    {{ form.submit() }}
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<div>
+    <h2>単語更新画面</h2>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.id(value=verb.id) }}
+        {{ form.str_en.label }}{{ form.str_en(value=verb.str_en) }}<br>
+        {{ form.str_ja.label }}{{ form.str_ja(value=verb.str_ja) }}<br>
+        {{ form.submit() }}
+    </form>
+</div>
+{% endblock %}
