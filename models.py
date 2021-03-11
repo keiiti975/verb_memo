@@ -21,7 +21,7 @@ class Verb(db.Model):
     __tablename__ = 'verbs'
 
     id = db.Column(db.Integer, primary_key=True)
-    str_en = db.Column(db.Text)
+    str_en = db.Column(db.Text, unique=True)
     str_ja = db.Column(db.Text)
 
     def __init__(self, str_en, str_ja):

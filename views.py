@@ -4,6 +4,7 @@
 from flask import request, render_template, url_for, redirect
 from forms import CreateForm, UpdateForm, DeleteForm
 from models import db, Verb
+from functional import check_duplicate
 from app import app
 
 
@@ -12,7 +13,14 @@ from app import app
 def verb_list():
     verbs = Verb.query.all()
     form = DeleteForm(request.form)
-    return render_template('verb_list.html', verbs=verbs, form=form)
+    return render_template('verb_list.html', verbs=verbs, form=form, error_msg=None)
+
+
+@app.route('/verb_list_with_error/<string:error_flag>')
+def verb_list_with_error(error_flag):
+    verbs = Verb.query.all()
+    form = DeleteForm(request.form)
+    return render_template('verb_list.html', verbs=verbs, form=form, error_flag=error_flag)
 
 
 @app.route('/add_verb', methods=['GET', 'POST'])
@@ -21,11 +29,14 @@ def add_verb():
     if request.method == 'POST' and form.validate():
         str_en = form.str_en.data
         str_ja = form.str_ja.data
-        with db.session.begin(subtransactions=True):
-            new_verb = Verb(str_en, str_ja)
-            db.session.add(new_verb)
-        db.session.commit()
-        return redirect(url_for('verb_list'))
+        if check_duplicate(str_en) == False:
+            with db.session.begin(subtransactions=True):
+                new_verb = Verb(str_en, str_ja)
+                db.session.add(new_verb)
+            db.session.commit()
+            return redirect(url_for('verb_list'))
+        else:
+            return redirect(url_for('verb_list_with_error', error_flag="duplicate_error"))
     return render_template('add_verb.html', form=form)
 
 
@@ -37,12 +48,22 @@ def update_verb(verb_id):
         id = form.id.data
         str_en = form.str_en.data
         str_ja = form.str_ja.data
+        update_success_flag = True
         with db.session.begin(subtransactions=True):
             verb = Verb.query.get(id)
-            verb.str_en = str_en
-            verb.str_ja = str_ja
+            if verb.str_en == str_en:
+                verb.str_ja = str_ja
+            else:
+                if check_duplicate(str_en) == False:
+                    verb.str_en = str_en
+                    verb.str_ja = str_ja
+                else:
+                    update_success_flag = False
         db.session.commit()
-        return redirect(url_for('verb_list'))
+        if update_success_flag:
+            return redirect(url_for('verb_list'))
+        else:
+            return redirect(url_for('verb_list_with_error', error_flag="duplicate_error"))
     return render_template('update_verb.html', form=form, verb=verb)
 
 

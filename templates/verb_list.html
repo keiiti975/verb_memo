@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
+{% if error_flag == "duplicate_error" %}
+<script>alert("英語が重複しています")</script>
+{% endif %}
+
 <a href="{{ url_for('add_verb') }}">単語を追加</a>
 <div>
     <h2>単語一覧</h2>
