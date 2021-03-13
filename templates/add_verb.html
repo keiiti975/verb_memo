@@ -8,5 +8,8 @@
         {{ form.str_ja.label }}{{ form.str_ja() }}<br>
         {{ form.submit() }}
     </form>
+    <form action="{{ url_for('verb_list') }}">
+        <input type="submit" value="戻る">
+    </form>
 </div>
 {% endblock %}
