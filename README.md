@@ -30,10 +30,15 @@ flask db migrate -m "some message"
 flask db upgrade
 ```
 
+#### アプリの実行
+```python
+python views.py
+```
+
 #### TODOリスト  
-- [ ] 英語から日本語への暗記張  
 - [ ] 日本語から英語への暗記張  
 
 --- 更新履歴 ---  
 - 2021/3  
   - 単語の登録・更新・削除画面に前の画面に戻るボタンを設置  
+  - 英語から日本語への暗記張  

@@ -1,3 +1,4 @@
+import random
 from models import Verb
 
 
@@ -6,3 +7,9 @@ def check_duplicate(str_en):
         return True
     else:
         return False
+
+
+def get_random_word():
+    verb_ids = [value.id for value in Verb.query.all()]
+    verb_id_selected = random.choice(verb_ids)
+    return Verb.query.get(verb_id_selected)

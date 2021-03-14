@@ -2,9 +2,9 @@
     アプリの実行時はこのファイルを実行
 """
 from flask import request, render_template, url_for, redirect
-from forms import CreateForm, UpdateForm, DeleteForm
+from forms import CreateForm, UpdateForm, DeleteForm, WordInputForm
 from models import db, Verb
-from functional import check_duplicate
+from functional import check_duplicate, get_random_word
 from app import app
 
 
@@ -78,6 +78,22 @@ def delete_verb():
         db.session.commit()
         return redirect(url_for('verb_list'))
     return redirect(url_for('verb_list'))
+
+
+@app.route('/en2ja_wordbook', methods=['GET', 'POST'])
+def en2ja_wordbook():
+    form = WordInputForm(request.form)
+    if request.method == "POST":
+        verb = Verb.query.get(form.id.data)
+        if form.answer.data == "":
+            form.answer.data = "未解答"
+
+        if form.validate():
+            answer = form.answer.data
+            return render_template('en2ja_wordbook.html', verb=verb, answer=answer)
+    else:
+        verb = get_random_word()
+        return render_template('en2ja_wordbook.html', form=form, verb=verb)
 
 
 if __name__ == '__main__':

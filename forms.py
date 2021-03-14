@@ -21,3 +21,9 @@ class UpdateForm(Form):
 class DeleteForm(Form):
     id = HiddenField()
     submit = SubmitField('削除')
+
+
+class WordInputForm(Form):
+    id = HiddenField()
+    answer = StringField('解答: ')
+    submit = SubmitField('送信')

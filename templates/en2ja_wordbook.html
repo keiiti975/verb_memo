@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+{% if not answer %}
+<div>
+    <h2>日本語を入力してください</h2>
+    英語: {{ verb.str_en }}<br>
+    <form method="POST">
+        {{ form.csrf_token }}
+        {{ form.id(value=verb.id) }}
+        <p>{{ form.answer.label }}{{ form.answer() }}</p>
+        {{ form.submit() }}
+    </form>
+</div>
+{% else %}
+<div>
+    <h2>答え</h2>
+    <p>英語: {{ verb.str_en }}</p>
+    <p>日本語: {{ verb.str_ja }}</p>
+    <p>解答: {{ answer }}</p>
+    <form action="{{ url_for('en2ja_wordbook') }}">
+        <input type="submit" value="次へ">
+    </form>
+</div>
+{% endif %}
+{% endblock %}
