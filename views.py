@@ -96,5 +96,21 @@ def en2ja_wordbook():
         return render_template('en2ja_wordbook.html', form=form, verb=verb)
 
 
+@app.route('/ja2en_wordbook', methods=['GET', 'POST'])
+def ja2en_wordbook():
+    form = WordInputForm(request.form)
+    if request.method == "POST":
+        verb = Verb.query.get(form.id.data)
+        if form.answer.data == "":
+            form.answer.data = "未解答"
+
+        if form.validate():
+            answer = form.answer.data
+            return render_template('ja2en_wordbook.html', verb=verb, answer=answer)
+    else:
+        verb = get_random_word()
+        return render_template('ja2en_wordbook.html', form=form, verb=verb)
+
+
 if __name__ == '__main__':
     app.run(debug=True)

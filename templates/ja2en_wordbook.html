@@ -2,8 +2,8 @@
 {% block content %}
 {% if not answer %}
 <div>
-    <h2>日本語を入力してください</h2>
-    英語: {{ verb.str_en }}<br>
+    <h2>英語を入力してください</h2>
+    日本語: {{ verb.str_ja }}<br>
     <form method="POST">
         {{ form.csrf_token }}
         {{ form.id(value=verb.id) }}
@@ -17,10 +17,10 @@
 {% else %}
 <div>
     <h2>答え</h2>
-    <p>英語: {{ verb.str_en }}</p>
     <p>日本語: {{ verb.str_ja }}</p>
+    <p>英語: {{ verb.str_en }}</p>
     <p>解答: {{ answer }}</p>
-    <form action="{{ url_for('en2ja_wordbook') }}">
+    <form action="{{ url_for('ja2en_wordbook') }}">
         <input type="submit" value="次へ">
     </form>
     <form action="{{ url_for('verb_list') }}">
