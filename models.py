@@ -14,7 +14,8 @@ from flask_migrate import Migrate
 from app import app
 
 db = SQLAlchemy(app)
-Migrate(app, db)
+db.init_app(app)
+migrate = Migrate(app, db)
 
 
 class Verb(db.Model):

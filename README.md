@@ -18,6 +18,9 @@ Windowsなら
 ```bash
 set FLASK_APP=models.py
 ```
+```powershell
+$Env:FLASK_APP = "models.py"
+```
 をそれぞれのコマンドの前に付ける  
 
 ○初期化  

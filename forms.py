@@ -1,7 +1,7 @@
 from wtforms import Form
 from wtforms.fields import (
     HiddenField, StringField, IntegerField,
-    TextField, SubmitField
+    SubmitField
 )
 
 
