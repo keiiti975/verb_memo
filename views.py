@@ -1,16 +1,17 @@
 """
     アプリの実行時はこのファイルを実行
 """
-from flask import request, render_template, url_for, redirect
+from flask import request, render_template, url_for, redirect, session
 from forms import CreateForm, UpdateForm, DeleteForm, WordInputForm
 from models import db, Verb
-from functional import check_duplicate, get_random_word
+from functional import check_duplicate, enqueue_verb_id_history, get_random_word, enqueue_verb_id_history
 from app import app
 
 
 @app.route('/')
 @app.route('/verb_list')
 def verb_list():
+    session.pop("verb_id_history", None)
     verbs = Verb.query.all()
     form = DeleteForm(request.form)
     return render_template('verb_list.html', verbs=verbs, form=form, error_msg=None)
@@ -92,7 +93,15 @@ def en2ja_wordbook():
             answer = form.answer.data
             return render_template('en2ja_wordbook.html', verb=verb, answer=answer)
     else:
-        verb = get_random_word()
+        if session.get("verb_id_history") == None:
+            session["verb_id_history"] = []
+
+        verb = get_random_word(session["verb_id_history"])
+
+        # 暗記帳のヒストリーとの重複を避ける機能
+        verb_id_history = session["verb_id_history"]
+        verb_id_history = enqueue_verb_id_history(verb_id_history, verb.id, max_queue_size=30)
+        session["verb_id_history"] = verb_id_history
         return render_template('en2ja_wordbook.html', form=form, verb=verb)
 
 
@@ -108,7 +117,15 @@ def ja2en_wordbook():
             answer = form.answer.data
             return render_template('ja2en_wordbook.html', verb=verb, answer=answer)
     else:
-        verb = get_random_word()
+        if session.get("verb_id_history") == None:
+            session["verb_id_history"] = []
+
+        verb = get_random_word(session["verb_id_history"])
+
+        # 暗記帳のヒストリーとの重複を避ける機能
+        verb_id_history = session["verb_id_history"]
+        verb_id_history = enqueue_verb_id_history(verb_id_history, verb.id, max_queue_size=30)
+        session["verb_id_history"] = verb_id_history
         return render_template('ja2en_wordbook.html', form=form, verb=verb)
 
 
